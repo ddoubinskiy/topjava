@@ -18,20 +18,14 @@
     </tr>
     <c:set var="list" scope="page" value="${requestScope.list}"/>
     <c:forEach items="${list}" var="mealElement">
-        <tr>
+        <c:set value="${mealElement.excess ? 'color:red' : 'color:green'}" scope="page" var="colorSetting"/>
+        <tr style="${colorSetting}">
             <td>
                 <fmt:parseDate value="${mealElement.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" scope="page" var="parsedDate"/>
                 <fmt:formatDate value="${parsedDate}" type="both" pattern="dd-MM-yyyy HH:mm"/>
             </td>
             <td>${mealElement.description}</td>
-            <td>
-                <c:if test="${mealElement.excess}">
-                    <span style="color: red">${mealElement.calories}</span>
-                </c:if>
-                <c:if test="${not mealElement.excess}">
-                    <span style="color: green">${mealElement.calories}</span>
-                </c:if>
-            </td>
+            <td>${mealElement.calories}</td>
         </tr>
     </c:forEach>
 </table>
