@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Meals</title>
@@ -18,7 +19,10 @@
     <c:set var="list" scope="page" value="${requestScope.list}"/>
     <c:forEach items="${list}" var="mealElement">
         <tr>
-            <td>${mealElement.dateTime}</td>
+            <td>
+                <fmt:parseDate value="${mealElement.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" scope="page" var="parsedDate"/>
+                <fmt:formatDate value="${parsedDate}" type="both" pattern="dd-MM-yyyy HH:mm"/>
+            </td>
             <td>${mealElement.description}</td>
             <td>
                 <c:if test="${mealElement.excess}">
