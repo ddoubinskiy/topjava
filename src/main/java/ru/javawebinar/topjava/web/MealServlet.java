@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.dao.MealDAO;
 import ru.javawebinar.topjava.dao.local.MealDAOLocalImpl;
 import ru.javawebinar.topjava.model.Meal;
@@ -16,8 +14,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet
 {
@@ -72,7 +68,7 @@ public class MealServlet extends HttpServlet
         {
             Meal newMeal = new Meal(dateTime, description, calories);
             String idStr = req.getParameter("id");
-            if(idStr != null && !idStr.isEmpty())
+            if (idStr != null && !idStr.isEmpty())
             {
                 repository.update(Long.parseLong(idStr), newMeal);
             } else
