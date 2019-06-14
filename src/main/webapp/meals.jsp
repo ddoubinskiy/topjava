@@ -15,6 +15,7 @@
         <th>Date</th>
         <th>Description</th>
         <th>Calories</th>
+        <th colspan="2">Action</th>
     </tr>
     <c:set var="list" scope="page" value="${requestScope.list}"/>
     <c:forEach items="${list}" var="mealElement">
@@ -26,8 +27,12 @@
             </td>
             <td>${mealElement.description}</td>
             <td>${mealElement.calories}</td>
+            <td><a href="meals?action=edit&id=${mealElement.id}">Edit</a></td>
+            <td><a href="meals?action=delete&id=${mealElement.id}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
+<br>
+<a href="mealForm.jsp">Add a new meal</a>
 </body>
 </html>

@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.dao.local;
 
 import ru.javawebinar.topjava.dao.MealDAO;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +16,29 @@ public class MealDAOLocalImpl implements MealDAO
 
     private AtomicLong currentId = new AtomicLong(-1);
 
+    public MealDAOLocalImpl()
+    {
+        List<Meal> hardCodedMeals = MealsUtil.getHardCodedMeals();
+        for (Meal meal : hardCodedMeals)
+        {
+            add(meal);
+        }
+    }
+
     @Override
     public void add(Meal meal)
     {
-        if(meal != null )
+        if (meal != null)
         {
-            localStorage.put(generateNextId(), meal);
+            meal.setId(generateNextId());
+            localStorage.put(meal.getId(), meal);
         }
     }
 
     @Override
     public Meal get(long id)
     {
-        if(localStorage.containsKey(id))
+        if (localStorage.containsKey(id))
         {
             return localStorage.get(id);
         }
@@ -37,8 +48,9 @@ public class MealDAOLocalImpl implements MealDAO
     @Override
     public void update(long id, Meal meal)
     {
-        if(localStorage.containsKey(id))
+        if (localStorage.containsKey(id))
         {
+            meal.setId(id);
             localStorage.replace(id, meal);
         }
     }
@@ -46,7 +58,7 @@ public class MealDAOLocalImpl implements MealDAO
     @Override
     public void delete(long id)
     {
-        if(localStorage.containsKey(id))
+        if (localStorage.containsKey(id))
         {
             localStorage.remove(id);
         }

@@ -22,13 +22,21 @@ public class MealTo {
     }
 
     @Override
-    public String toString() {
-        return "MealTo{" +
-                "dateTime=" + dateTime +
-                ", description='" + description + '\'' +
-                ", calories=" + calories +
-                ", excess=" + excess +
-                '}';
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer("MealTo{");
+        sb.append("id=").append(id);
+        sb.append(", dateTime=").append(dateTime);
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", calories=").append(calories);
+        sb.append(", excess=").append(excess);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public long getId()
+    {
+        return id;
     }
 
     public LocalDateTime getDateTime()
