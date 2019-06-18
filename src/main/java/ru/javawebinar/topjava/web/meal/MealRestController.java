@@ -10,7 +10,10 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
+import java.util.Collections;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
@@ -38,19 +41,24 @@ public class MealRestController {
     }
 
     public Meal create(Meal meal) {
-        log.info("create {}", meal);
+        log.info("create meal {}", meal);
         checkNew(meal);
         return service.create(authUserId, meal);
     }
 
     public void delete(int id) {
-        log.info("delete {}", id);
+        log.info("delete meal {}", id);
         service.delete(authUserId, id);
     }
 
     public void update(Meal meal, int id) {
-        log.info("update {} with id={}", meal, id);
+        log.info("update meal {} with id={}", meal, id);
         assureIdConsistent(meal, id);
         service.update(authUserId, meal);
+    }
+
+    public Collection<MealTo> getAllFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime)
+    {
+        return Collections.emptyList();
     }
 }

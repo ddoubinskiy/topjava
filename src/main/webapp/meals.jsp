@@ -21,6 +21,26 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+    <br>
+    <form action="meals" method="post">
+        <input type="hidden" name="dtf">
+        <dl>
+            <dt>From date</dt>
+            <dd><input type="date" name="fromDate"/></dd>
+            <dt>To date</dt>
+            <dd><input type="date" name="toDate"/></dd>
+        </dl>
+        <dl>
+            <dt>From time</dt>
+            <dd><input type="time" name="fromTime"/></dd>
+            <dt>To time</dt>
+            <dd><input type="time" name="toTime"/></dd>
+        </dl>
+        <input type="submit" value="Filter">
+        <span>&emsp</span>
+        <input type="reset" value="Reset">
+    </form>
+    <br>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
