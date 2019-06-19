@@ -10,15 +10,14 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Repository
-public class InMemoryMealRepositoryImpl implements MealRepository {
+public class InMemoryMealRepositoryImpl implements MealRepository
+{
     private static final Logger log = LoggerFactory.getLogger(InMemoryMealRepositoryImpl.class);
 
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
@@ -30,19 +29,17 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal save(int userId, Meal meal) {
-        if(repository.containsKey(userId))
+    public Meal save(int userId, Meal meal)
+    {
+        repository.putIfAbsent(userId, new HashMap<>());
+        if (meal.isNew())
         {
-            repository.putIfAbsent(userId, new HashMap<>());
-            if (meal.isNew()) {
-                meal.setId(counter.incrementAndGet());
-                repository.get(userId).put(meal.getId(), meal);
-                return meal;
-            }
-            // treat case: update, but absent in storage
-            return repository.get(userId).computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+            meal.setId(counter.incrementAndGet());
+            repository.get(userId).put(meal.getId(), meal);
+            return meal;
         }
-        return null;
+        // treat case: update, but absent in storage
+        return repository.get(userId).computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
@@ -52,8 +49,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal get(int userId, int id) {
-        if(repository.containsKey(userId))
+    public Meal get(int userId, int id)
+    {
+        if (repository.containsKey(userId))
         {
             return repository.get(userId).get(id);
         }
@@ -61,17 +59,18 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId) {
-            return getAllBetween(userId, LocalDate.MIN, LocalDate.MAX, LocalTime.MIN, LocalTime.MAX);
+    public Collection<Meal> getAll(int userId)
+    {
+        return getAllBetween(userId, LocalDate.MIN, LocalDate.MAX);
     }
 
     @Override
-    public Collection<Meal> getAllBetween(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime)
+    public Collection<Meal> getAllBetween(int userId, LocalDate startDate, LocalDate endDate)
     {
-        if(repository.containsKey(userId))
+        if (repository.containsKey(userId))
         {
             Collection<Meal> meals = repository.get(userId).values();
-          return   meals.stream().filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate) && DateTimeUtil.isBetween(meal.getTime(), startTime, endTime))
+            return meals.stream().filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
                     .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
         }
         return Collections.emptyList();

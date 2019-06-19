@@ -10,12 +10,23 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class UserServlet extends HttpServlet {
+public class UserServlet extends HttpServlet
+{
     private static final Logger log = getLogger(UserServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         log.debug("forward to users");
         request.getRequestDispatcher("/users.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        request.setCharacterEncoding("UTF-8");
+        SecurityUtil.setAuthUserId(Integer.parseInt(request.getParameter("usrSelect")));
+
+        response.sendRedirect("meals");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepositoryImpl;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet
@@ -26,24 +28,27 @@ public class MealServlet extends HttpServlet
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController controller;
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException
     {
         super.init(config);
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml"))
-        {
-            controller = appCtx.getBean(MealRestController.class);
-        }
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        controller = appCtx.getBean(MealRestController.class);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         request.setCharacterEncoding("UTF-8");
-        if(request.getParameterMap().containsKey("dtf"))
+        if (request.getParameterMap().containsKey("dtf"))
         {
+            Collection<MealTo> filteredByDateTime = controller.getAllFiltered(request.getParameter("fromDt"), request.getParameter("toDt"),
+                    request.getParameter("fromTm"), request.getParameter("toTm"));
+            request.setAttribute("meals", filteredByDateTime);
 
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
         } else
         {
             String id = request.getParameter("id");
@@ -91,6 +96,13 @@ public class MealServlet extends HttpServlet
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
+    }
+
+    @Override
+    public void destroy()
+    {
+        appCtx.close();
+        super.destroy();
     }
 
     private int getId(HttpServletRequest request)

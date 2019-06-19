@@ -19,12 +19,11 @@ import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
-public class MealRestController {
+public class MealRestController
+{
     private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
 
     private final MealService service;
-
-    private int authUserId = SecurityUtil.authUserId();
 
     @Autowired
     public MealRestController(MealService service)
@@ -32,33 +31,48 @@ public class MealRestController {
         this.service = service;
     }
 
-    public Collection<MealTo> getAll() {
-        return MealsUtil.getWithExcess(service.getAll(authUserId), SecurityUtil.authUserCaloriesPerDay());
+    public Collection<MealTo> getAll()
+    {
+        return MealsUtil.getWithExcess(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public Meal get(int id) {
-        return service.get(authUserId, id);
+    public Meal get(int id)
+    {
+        return service.get(SecurityUtil.authUserId(), id);
     }
 
-    public Meal create(Meal meal) {
+    public Meal create(Meal meal)
+    {
         log.info("create meal {}", meal);
         checkNew(meal);
-        return service.create(authUserId, meal);
+        return service.create(SecurityUtil.authUserId(), meal);
     }
 
-    public void delete(int id) {
+    public void delete(int id)
+    {
         log.info("delete meal {}", id);
-        service.delete(authUserId, id);
+        service.delete(SecurityUtil.authUserId(), id);
     }
 
-    public void update(Meal meal, int id) {
+    public void update(Meal meal, int id)
+    {
         log.info("update meal {} with id={}", meal, id);
         assureIdConsistent(meal, id);
-        service.update(authUserId, meal);
+        service.update(SecurityUtil.authUserId(), meal);
     }
 
-    public Collection<MealTo> getAllFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime)
+    public Collection<MealTo> getAllFiltered(String startDate, String endDate, String startTime, String endTime)
     {
-        return Collections.emptyList();
+        LocalDate startLd = LocalDate.MIN;
+        LocalDate endLd = LocalDate.MAX;
+        if (startDate != null && !startDate.isEmpty()) startLd = LocalDate.parse(startDate);
+        if (endDate != null && !endDate.isEmpty()) endLd = LocalDate.parse(endDate);
+
+        Collection<Meal> filteredByDate = service.getAllBetween(SecurityUtil.authUserId(), startLd, endLd);
+        LocalTime startLt = LocalTime.MIN;
+        LocalTime endLt = LocalTime.MAX;
+        if (startTime != null && !startTime.isEmpty()) startLt = LocalTime.parse(startTime);
+        if (endTime != null && !endTime.isEmpty()) endLt = LocalTime.parse(endTime);
+        return MealsUtil.getFilteredWithExcess(filteredByDate, SecurityUtil.authUserCaloriesPerDay(), startLt, endLt);
     }
 }

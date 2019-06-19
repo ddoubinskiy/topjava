@@ -26,19 +26,18 @@
         <input type="hidden" name="dtf">
         <dl>
             <dt>From date</dt>
-            <dd><input type="date" name="fromDate"/></dd>
+            <dd><input type="date" name="fromDt"/></dd>
             <dt>To date</dt>
-            <dd><input type="date" name="toDate"/></dd>
+            <dd><input type="date" name="toDt"/></dd>
         </dl>
         <dl>
             <dt>From time</dt>
-            <dd><input type="time" name="fromTime"/></dd>
+            <dd><input type="time" name="fromTm"/></dd>
             <dt>To time</dt>
-            <dd><input type="time" name="toTime"/></dd>
+            <dd><input type="time" name="toTm"/></dd>
         </dl>
-        <input type="submit" value="Filter">
-        <span>&emsp</span>
-        <input type="reset" value="Reset">
+        <input type="submit" value="Filter"/>
+        <a href="meals"><input type="button" value="Reset"/></a>
     </form>
     <br>
     <a href="meals?action=create">Add Meal</a>
