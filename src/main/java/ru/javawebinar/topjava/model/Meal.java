@@ -4,46 +4,91 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Meal extends AbstractBaseEntity {
-    private final LocalDateTime dateTime;
+public class Meal extends AbstractBaseEntity
+{
+    private LocalDateTime dateTime;
 
-    private final String description;
+    private String description;
 
-    private final int calories;
+    private int calories;
 
-    public Meal(LocalDateTime dateTime, String description, int calories) {
+    public Meal()
+    {
+    }
+
+    public Meal(Integer id, String description, int calories)
+    {
+        super(id);
+        this.dateTime = LocalDateTime.now();
+        this.description = description;
+        this.calories = calories;
+    }
+
+    public Meal(LocalDateTime dateTime, String description, int calories)
+    {
         this(null, dateTime, description, calories);
     }
 
-    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories)
+    {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
     }
 
-    public LocalDateTime getDateTime() {
+    //copy constructor
+    public Meal(Meal meal)
+    {
+        id = meal.getId();
+        dateTime = meal.getDateTime();
+        description = meal.getDescription();
+        calories = meal.getCalories();
+    }
+
+    public LocalDateTime getDateTime()
+    {
         return dateTime;
     }
 
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
 
-    public int getCalories() {
+    public int getCalories()
+    {
         return calories;
     }
 
-    public LocalDate getDate() {
+    public LocalDate getDate()
+    {
         return dateTime.toLocalDate();
     }
 
-    public LocalTime getTime() {
+    public LocalTime getTime()
+    {
         return dateTime.toLocalTime();
     }
 
+    public void setDateTime(LocalDateTime dateTime)
+    {
+        this.dateTime = dateTime;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public void setCalories(int calories)
+    {
+        this.calories = calories;
+    }
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Meal{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +

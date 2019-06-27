@@ -9,14 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
-public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
+public class InMemoryBaseRepository<T extends AbstractBaseEntity>
+{
 
     private static AtomicInteger counter = new AtomicInteger(0);
 
     Map<Integer, T> entryMap = new ConcurrentHashMap<>();
 
-    public T save(T entry) {
-        if (entry.isNew()) {
+    public T save(T entry)
+    {
+        if (entry.isNew())
+        {
             entry.setId(counter.incrementAndGet());
             entryMap.put(entry.getId(), entry);
             return entry;
@@ -24,15 +27,18 @@ public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
         return entryMap.computeIfPresent(entry.getId(), (id, oldT) -> entry);
     }
 
-    public boolean delete(int id) {
+    public boolean delete(int id)
+    {
         return entryMap.remove(id) != null;
     }
 
-    public T get(int id) {
+    public T get(int id)
+    {
         return entryMap.get(id);
     }
 
-    Collection<T> getCollection() {
+    Collection<T> getCollection()
+    {
         return entryMap.values();
     }
 }

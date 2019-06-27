@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.UserTestData;
@@ -16,9 +18,11 @@ import java.util.Collection;
 
 import static ru.javawebinar.topjava.UserTestData.ADMIN;
 
-@ContextConfiguration("classpath:spring/spring-app.xml")
+@ContextConfiguration({"classpath:spring-test.xml"})
 @RunWith(SpringRunner.class)
-public class InMemoryAdminRestControllerSpringTest {
+@ActiveProfiles("inmemo")
+public class InMemoryAdminRestControllerSpringTest
+{
 
     @Autowired
     private AdminRestController controller;
@@ -27,12 +31,14 @@ public class InMemoryAdminRestControllerSpringTest {
     private InMemoryUserRepository repository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         repository.init();
     }
 
     @Test
-    public void delete() throws Exception {
+    public void delete() throws Exception
+    {
         controller.delete(UserTestData.USER_ID);
         Collection<User> users = controller.getAll();
         Assert.assertEquals(users.size(), 1);
@@ -40,7 +46,8 @@ public class InMemoryAdminRestControllerSpringTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteNotFound() throws Exception {
+    public void deleteNotFound() throws Exception
+    {
         controller.delete(10);
     }
 }
